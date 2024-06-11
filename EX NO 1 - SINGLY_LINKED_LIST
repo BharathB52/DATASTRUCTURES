@@ -1,0 +1,531 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct node
+{
+    int data;
+    struct node *next;
+};
+
+struct node *head=NULL;
+
+void isempty();
+void islast();
+void findnext();
+void findprevious();
+void deleteall();
+void ainsertion();
+void binsertion();
+void cinsertion();
+void adeletion();
+void bdeletion();
+void cdeletion();
+void searching();
+void display();
+void traverse();
+
+void main()
+{
+    int choice=0;
+    while (choice<=15)
+    {
+        printf("Enter choice");
+        scanf("%d",&choice);
+        switch(choice)
+        {
+            case 1:
+                ainsertion();
+                break;
+            case 2:
+                binsertion();
+                break;
+            case 3:
+                cinsertion();
+                break;
+            case 4:
+                adeletion();
+                break;
+            case 5:
+                bdeletion();
+                break;
+            case 6:
+                cdeletion();
+                break;
+            case 7:
+                searching();
+                break;
+            case 8:
+                display();
+                break;
+            case 9:
+                traverse();
+                break;
+            case 10:
+                isempty();
+                break;
+            case 11:
+                islast();
+                break;
+            case 12:
+                findprevious();
+                break;
+            case 13:
+                findnext();
+                break;
+            case 14:
+                deleteall();
+                break;    
+            case 15:
+                exit(0);
+                break;
+        }
+    }
+}
+
+void isempty()
+{
+    if(head==NULL)
+    {
+        printf("IS EMPTY ");
+    }
+    else
+    {
+        printf("IS NOT EMPTY ");
+    }
+}
+
+void islast()
+{
+    struct node *temp;
+    int flag=1;
+    if(head==NULL)
+    {
+        printf("EMPTY LIST ");
+    }
+    else
+    {
+        temp=head;
+        while(temp)
+        {
+            temp=temp->next;
+            if(temp==NULL)
+            {
+                printf("IS LAST ");
+                flag=0;
+                break;
+            }
+        }
+        
+        if(flag)
+        {
+            printf("IS NOT LAST ");
+        }
+    }
+}
+
+void ainsertion()
+{
+    struct node *newnode;
+    newnode=(struct node*)malloc(sizeof(struct node));
+    
+    if(newnode==NULL)
+    {
+        printf("OVERFLOW");
+    }
+    else
+    {
+        printf("Enter data");
+        scanf("%d",&newnode->data);
+        newnode->next=NULL;
+        
+        if(head==NULL)
+        {
+            head=newnode;
+        }
+        else
+        {
+            newnode->next=head;
+            head=newnode;
+        }
+    }
+}
+    
+void binsertion()
+{
+    struct node *newnode,*prevnode;
+    newnode=(struct node*)malloc(sizeof(struct node));
+    
+    if(newnode==NULL)
+    {
+        printf("OVERFLOW");
+    }
+    else
+    {
+        printf("Enter data");
+        scanf("%d",&newnode->data);
+        newnode->next=NULL;
+        
+        if(head==NULL)
+        {
+            head=newnode;
+        }
+        else
+        {
+            prevnode=head;
+            while(prevnode->next!=NULL)
+            {
+                prevnode=prevnode->next;
+            }
+            prevnode->next=newnode;
+            
+        }
+    }
+}
+
+void cinsertion()
+{
+    struct node *newnode,*prevnode,*nextnode;
+    newnode=(struct node*)malloc(sizeof(struct node));
+    int pos,count=1,i=1;
+    printf("Enter position");
+    scanf("%d",&pos);
+    
+    if(newnode==NULL)
+    {
+        printf("OVERFLOW");
+    }
+    else
+    {
+        printf("Enter data");
+        scanf("%d",&newnode->data);
+        newnode->next=NULL;
+        
+        if(pos==1)
+        {
+            if(head==NULL)
+            {
+                head=newnode;
+            }
+            else
+            {
+                 newnode->next=head;
+                 head=newnode;
+            }            
+        }
+        else
+        {
+            prevnode=head; //use this cnt loop whre u use cnt
+            while(prevnode->next!=NULL)
+            { 
+                prevnode=prevnode->next;
+                count++;
+            }
+        
+            if(pos<=count)
+            {
+                nextnode=head;
+                while(i<pos)
+                {
+                    prevnode=nextnode;
+                    nextnode=nextnode->next;
+                    i++;
+                }
+                prevnode->next=newnode;
+                newnode->next=nextnode;
+            }
+            else if (pos==count+1)
+            {
+                prevnode=head;  
+                while(prevnode->next!=NULL)
+                { 
+                     prevnode=prevnode->next;
+                }
+                prevnode->next=newnode;
+            }
+            else
+            {
+                printf("OUT OF LIST");
+            }
+        }
+    }
+}
+
+void adeletion()
+{
+    struct node *delnode;
+    
+    if(head==NULL)
+    {
+        printf("UNDERFLOW/EMPTY");
+    }
+    else
+    {
+        if(head->next==NULL)
+        {
+            delnode=head;
+            head=NULL;
+            
+            free(delnode);
+        }
+        else
+        {
+            delnode=head;
+            head=head->next; 
+            delnode->next=NULL;
+            
+            free(delnode);
+        }
+    }
+}
+
+void bdeletion()
+{
+    struct node *delnode,*prevnode;
+    
+    if(head==NULL)
+    {
+        printf("UNDERFLOW/EMPTY LIST");
+    }
+    else
+    {
+        if(head->next==NULL)
+        {
+            delnode=head;
+            head=NULL;
+            
+            free(delnode);
+        }
+        else
+        {
+            delnode=head;
+            while(delnode->next!=NULL)
+            {
+                prevnode=delnode;
+                delnode=delnode->next;
+            }
+            prevnode->next=NULL;
+            delnode->next=NULL;
+            
+            free(delnode);
+        }
+    }
+}
+
+void cdeletion()
+{
+    struct node *delnode,*prevnode;
+    int pos,count=1,i=1;
+    printf("Enter position");
+    scanf("%d",&pos);
+    
+    if(head==NULL)
+    {
+        printf("UNDERFLOW/EMPTY LIST");
+    }
+    else
+    {
+        if(pos==1)
+        {
+            if(head->next==NULL)
+            {
+                delnode=head;
+                head=NULL;
+                
+                free(delnode);
+            }
+            else
+            {
+                delnode=head;
+                head=head->next;
+                delnode->next=NULL;
+                
+                free(delnode);
+            }
+        }
+        else
+        {
+            prevnode=head;
+            while(prevnode->next!=NULL)
+            { 
+                prevnode=prevnode->next;
+                count++;
+            }
+        
+            if(pos<=count)
+            {
+                delnode=head;
+                while(i<pos)
+                {
+                    prevnode=delnode;
+                    delnode=delnode->next;
+                    i++;
+                }
+                prevnode->next=delnode->next;
+                delnode->next=NULL;
+                
+                free(delnode);
+                                    
+            }
+            else
+            {
+                printf("OUT OF LIST");
+            }
+        }
+        
+    }
+}
+
+void searching()
+{
+    struct node *node;
+    int val,pos=1,flag=1;
+    printf("Enter value");
+    scanf("%d",&val);
+    
+    if(head==NULL)
+    {
+        printf("EMPTY LIST");
+    }
+    else
+    {
+        node=head;
+        while(node!=NULL)
+        {
+            if(node->data==val)
+            {
+               printf("%d",pos);
+               flag=0;
+               break;
+            }
+            else
+            {
+                node=node->next;
+                pos++;
+            }
+        }
+        
+        if(flag)
+             printf("data not found");
+    }
+}
+
+void display()
+{
+    struct node *nodes;
+    if(head==NULL)
+    {
+        printf("EMPTY LIST");
+    }
+    else
+    {
+       nodes=head;
+       while(nodes!=NULL)
+       {
+           printf("%d ",nodes->data);
+           nodes=nodes->next;
+       }
+       printf("\n");
+    }
+}
+
+void traverse()
+{
+    struct node *node;
+    int pos=1,spos,flag=1;
+    printf("enter the position to know that position's data");
+    scanf("%d",&spos);
+    
+    if(head==NULL)
+    {
+       printf("EMPTY LIST"); 
+    }
+    else
+    {
+        node = head;
+        while(node!=NULL)
+        {
+            if(pos==spos)
+            {
+                printf("%d",node->data);
+                flag=0;
+                break;
+            }
+            node=node->next;
+            pos++;
+        } 
+    }
+    if(flag)
+        printf("POSITION NOT FOUND");
+}
+
+void findnext()
+{
+    int pos;
+    int i=1;
+    struct node *temp;
+    if(head==NULL)
+    {
+        printf("EMPTY LIST");
+    }
+    else
+    {
+        printf("ENTER THE POSITION ");
+        scanf("%d",&pos);
+        
+        printf("THE DATA IN NEXT NODE IS ");
+        temp=head;
+        while(i<pos)
+        {
+            temp=temp->next;
+            i++;
+        }
+        printf("%d ",temp->next->data);
+    }
+}
+
+void findprevious()
+{
+    int pos;
+    int i=1;
+    struct node *temp1,*temp2;
+    if(head==NULL)
+    {
+        printf("EMPTY LIST");
+    }
+    else
+    {
+        printf("ENTER THE POSITION ");
+        scanf("%d",&pos);
+        
+        printf("THE DATA IN PREVIOUS NODE IS ");
+        temp2=head;
+        while(i<pos)
+        {
+            temp1=temp2;
+            temp2=temp2->next;
+            i++;
+        }
+        printf("%d ",temp1->data);
+    }
+}
+
+void deleteall()
+{
+    struct node *temp,*delnode;
+    if(head==NULL)
+    {
+        printf("EMPTY LIST ");
+    }
+    else
+    {
+        temp=head;
+        while(temp!=NULL)
+        {
+            delnode=temp;
+            temp=temp->next;
+            head=temp;
+            
+            free(delnode);
+        }
+    }
+}
